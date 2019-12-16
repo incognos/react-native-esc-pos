@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="leesiongchan.reactnativeescpos">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
 </manifest>

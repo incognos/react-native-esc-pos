@@ -22,11 +22,16 @@ public class BluetoothPrinter implements Printer {
         this.address = address;
     }
 
-    public void open() throws IOException {
-        BluetoothDevice device = adapter.getRemoteDevice(address);
-        BluetoothSocket socket = device.createRfcommSocketToServiceRecord(SPP_UUID);
-        socket.connect();
-        printer = socket.getOutputStream();
+    public void open() {
+        try {
+            BluetoothDevice device = adapter.getRemoteDevice(address);
+            BluetoothSocket socket = device.createRfcommSocketToServiceRecord(SPP_UUID);
+
+            socket.connect();
+            printer = socket.getOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void write(byte[] command) {
@@ -38,7 +43,11 @@ public class BluetoothPrinter implements Printer {
         }
     }
 
-    public void close() throws IOException {
-        printer.close();
+    public void close() {
+        try {
+            printer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
