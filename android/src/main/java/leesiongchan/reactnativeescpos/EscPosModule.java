@@ -69,20 +69,30 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void cutPart(Promise promise) {
+    public void cutPart(Promise promise) throws IOException {
         printerService.cutPart();
         promise.resolve(true);
     }
 
     @ReactMethod
     public void cutFull(Promise promise) {
-        printerService.cutFull();
-        promise.resolve(true);
+        try {
+            printerService.cutFull();
+            promise.resolve(true);
+        } catch (IOException e) {
+            promise.reject(e);
+            e.printStackTrace();
+        }
     }
 
     @ReactMethod
     public void lineBreak(Promise promise) {
-        printerService.lineBreak();
+        try {
+            printerService.lineBreak();
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
         promise.resolve(true);
     }
 
@@ -92,6 +102,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             printerService.print(text);
             promise.resolve(true);
         } catch (UnsupportedEncodingException e) {
+            promise.reject(e);
+        } catch (IOException e) {
+            e.printStackTrace();
             promise.reject(e);
         }
     }
@@ -103,6 +116,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             promise.resolve(true);
         } catch (UnsupportedEncodingException e) {
             promise.reject(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
     }
 
@@ -112,6 +128,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             printerService.printBarcode(code, bc, width, height, pos, font);
             promise.resolve(true);
         } catch (BarcodeSizeError e) {
+            promise.reject(e);
+        } catch (IOException e) {
+            e.printStackTrace();
             promise.reject(e);
         }
     }
@@ -143,6 +162,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             promise.resolve(true);
         } catch (QRCodeException e) {
             promise.reject(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
         }
     }
 
@@ -158,17 +180,23 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void write(byte[] command, Promise promise) {
-        printerService.write(command);
-        promise.resolve(true);
+        try {
+            printerService.write(command);
+            promise.resolve(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+
     }
 
     @ReactMethod
-    public void setCharCode(String code) {
+    public void setCharCode(String code) throws IOException {
         printerService.setCharCode(code);
     }
 
     @ReactMethod
-    public void setTextDensity(int density) {
+    public void setTextDensity(int density) throws IOException {
         printerService.setTextDensity(density);
     }
 
@@ -178,15 +206,15 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         int printingWidth;
 
         switch (printingSize) {
-        case PRINTING_SIZE_80_MM:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
-            printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
-            break;
+            case PRINTING_SIZE_80_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
+                break;
 
-        case PRINTING_SIZE_58_MM:
-        default:
-            charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
-            printingWidth = PrinterService.PRINTING_WIDTH_58_MM;
+            case PRINTING_SIZE_58_MM:
+            default:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_58_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_58_MM;
         }
 
         printerService.setCharsOnLine(charsOnLine);
@@ -195,8 +223,13 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void beep(Promise promise) {
-        printerService.beep();
-        promise.resolve(true);
+        try {
+            printerService.beep();
+            promise.resolve(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -206,14 +239,24 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void kickCashDrawerPin2(Promise promise) {
-        printerService.kickCashDrawerPin2();
-        promise.resolve(true);
+        try {
+            printerService.kickCashDrawerPin2();
+            promise.resolve(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
     public void kickCashDrawerPin5(Promise promise) {
-        printerService.kickCashDrawerPin5();
-        promise.resolve(true);
+        try {
+            printerService.kickCashDrawerPin5();
+            promise.resolve(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -310,16 +353,16 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             BluetoothEvent bluetoothEvent;
 
             switch (callbackAction) {
-            case BluetoothDevice.ACTION_ACL_CONNECTED:
-                bluetoothEvent = BluetoothEvent.CONNECTED;
-                break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    bluetoothEvent = BluetoothEvent.CONNECTED;
+                    break;
 
-            case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                bluetoothEvent = BluetoothEvent.DISCONNECTED;
-                break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    bluetoothEvent = BluetoothEvent.DISCONNECTED;
+                    break;
 
-            default:
-                bluetoothEvent = BluetoothEvent.NONE;
+                default:
+                    bluetoothEvent = BluetoothEvent.NONE;
             }
 
             // bluetooth event must not be null

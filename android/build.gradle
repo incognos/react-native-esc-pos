@@ -26,22 +26,18 @@ def DEFAULT_MIN_SDK_VERSION = 16
 def DEFAULT_TARGET_SDK_VERSION = 28
 
 android {
-  compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
-  buildToolsVersion safeExtGet('buildToolsVersion', DEFAULT_BUILD_TOOLS_VERSION)
+    compileSdkVersion safeExtGet('compileSdkVersion', DEFAULT_COMPILE_SDK_VERSION)
+    buildToolsVersion safeExtGet('buildToolsVersion', DEFAULT_BUILD_TOOLS_VERSION)
 
-  defaultConfig {
-    minSdkVersion safeExtGet('minSdkVersion', DEFAULT_MIN_SDK_VERSION)
-    targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
-    versionCode 1
-    versionName "1.0"
-  }
-  lintOptions {
-    abortOnError false
-  }
-
-  dependencies {
-      implementation 'com.github.stefanosbou:esc-pos-java:master-SNAPSHOT'
-  }
+    defaultConfig {
+        minSdkVersion safeExtGet('minSdkVersion', DEFAULT_MIN_SDK_VERSION)
+        targetSdkVersion safeExtGet('targetSdkVersion', DEFAULT_TARGET_SDK_VERSION)
+        versionCode 1
+        versionName "1.0"
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
@@ -53,13 +49,18 @@ repositories {
     }
     mavenCentral()
     google()
-    maven { url "https://jitpack.io" }
+    mavenLocal()
+    jcenter()
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.facebook.react:react-native:+'
     implementation 'org.apache.commons:commons-lang3:3.4'
+    implementation 'com.pi4j:pi4j-core:1.2'
+    implementation 'com.pi4j:pi4j-device:1.2'
+    implementation 'com.journeyapps:zxing-android-embedded:3.0.2@aar'
+    implementation 'com.google.zxing:core:3.3.3'
 }
 
 def configureReactNativePom(def pom) {
@@ -90,6 +91,7 @@ def configureReactNativePom(def pom) {
     }
 }
 
+
 afterEvaluate { project ->
 
     task androidJavadoc(type: Javadoc) {
@@ -112,8 +114,8 @@ afterEvaluate { project ->
 
     android.libraryVariants.all { variant ->
         def name = variant.name.capitalize()
-        task "jar${name}"(type: Jar, dependsOn: variant.javaCompile) {
-            from variant.javaCompile.destinationDir
+        task "jar${name}"(type: Jar, dependsOn: variant.javaCompileProvider.get()) {
+            from variant.javaCompileProvider.get().destinationDir
         }
     }
 
@@ -132,3 +134,4 @@ afterEvaluate { project ->
         }
     }
 }
+

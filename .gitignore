@@ -35,8 +35,12 @@ build/
 .gradle
 local.properties
 *.iml
+.settings
 
 # BUCK
 buck-out/
 \.buckd/
 *.keystore
+
+gradlew
+gradlew.bat

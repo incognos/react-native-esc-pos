@@ -37,53 +37,53 @@ public class PrinterService {
         this.printingWidth = printingWidth;
     }
 
-    public void cutPart() {
+    public void cutPart() throws IOException {
         basePrinterService.cutPart();
     }
 
-    public void cutFull() {
+    public void cutFull() throws IOException {
         basePrinterService.cutFull();
     }
 
-    public void print(String text) throws UnsupportedEncodingException {
+    public void print(String text) throws IOException {
         write(text.getBytes("GBK"));
     }
 
-    public void printLn(String text) throws UnsupportedEncodingException {
+    public void printLn(String text) throws IOException {
         print(text + CARRIAGE_RETURN);
     }
 
-    public void lineBreak() {
+    public void lineBreak() throws IOException {
         basePrinterService.lineBreak();
     }
 
-    public void lineBreak(int nbLine) {
+    public void lineBreak(int nbLine) throws IOException {
         basePrinterService.lineBreak(nbLine);
     }
 
     // TODO: This isn't working correctly
     public void printBarcode(String code, String bc, int width, int height, String pos, String font)
-            throws BarcodeSizeError {
+            throws BarcodeSizeError, IOException {
         basePrinterService.printBarcode(code, bc, width, height, pos, font);
     }
 
     public void printSample() throws IOException {
         String design =
-            "               ABC Inc. {C}               " + "\n" +
-            "           1234 Main Street {C}           " + "\n" +
-            "        Anytown, US 12345-6789 {C}        " + "\n" +
-            "            (555) 123-4567 {C}            " + "\n" +
-            "                                          " + "\n" +
-            "          D0004 | Table #: A1 {C}         " + "\n" +
-            "------------------------------------------" + "\n" +
-            "Item            {<>}    Qty  Price  Amount" + "\n" +
-            "Chicken Rice    {<>}      2  12.50   25.00" + "\n" +
-            "Coke Zero       {<>}      5   3.00   15.00" + "\n" +
-            "Fries           {<>}      3   3.00    9.00" + "\n" +
-            "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
-            "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
-            "------------------------------------------" + "\n" +
-            "       {QR[Where are the aliens?]}        " + "\n";
+                "               ABC Inc. {C}               " + "\n" +
+                        "           1234 Main Street {C}           " + "\n" +
+                        "        Anytown, US 12345-6789 {C}        " + "\n" +
+                        "            (555) 123-4567 {C}            " + "\n" +
+                        "                                          " + "\n" +
+                        "          D0004 | Table #: A1 {C}         " + "\n" +
+                        "------------------------------------------" + "\n" +
+                        "Item            {<>}    Qty  Price  Amount" + "\n" +
+                        "Chicken Rice    {<>}      2  12.50   25.00" + "\n" +
+                        "Coke Zero       {<>}      5   3.00   15.00" + "\n" +
+                        "Fries           {<>}      3   3.00    9.00" + "\n" +
+                        "Fresh Oyster    {<>}      1   8.00    8.00" + "\n" +
+                        "Lobster Roll    {<>}      1  16.50   16.50" + "\n" +
+                        "------------------------------------------" + "\n" +
+                        "       {QR[Where are the aliens?]}        " + "\n";
 
         printDesign(design);
     }
@@ -105,16 +105,16 @@ public class PrinterService {
         write(baos.toByteArray());
     }
 
-    public void printQRCode(String value, int size) throws QRCodeException {
+    public void printQRCode(String value, int size) throws QRCodeException, IOException {
         ByteArrayOutputStream baos = generateQRCodeByteArrayOutputStream(value, size);
         write(baos.toByteArray());
     }
 
-    public void write(byte[] command) {
+    public void write(byte[] command) throws IOException {
         basePrinterService.write(command);
     }
 
-    public void setCharCode(String code) {
+    public void setCharCode(String code) throws IOException {
         basePrinterService.setCharCode(code);
     }
 
@@ -126,11 +126,11 @@ public class PrinterService {
         this.printingWidth = printingWidth;
     }
 
-    public void setTextDensity(int density) {
+    public void setTextDensity(int density) throws IOException {
         basePrinterService.setTextDensity(density);
     }
 
-    public void beep() {
+    public void beep() throws IOException {
         basePrinterService.beep();
     }
 
@@ -142,11 +142,11 @@ public class PrinterService {
         basePrinterService.close();
     }
 
-    public void kickCashDrawerPin2(){
+    public void kickCashDrawerPin2() throws IOException {
         basePrinterService.write(CD_KICK_2);
     }
 
-    public void kickCashDrawerPin5(){
+    public void kickCashDrawerPin5() throws IOException {
         basePrinterService.write(CD_KICK_5);
     }
 
