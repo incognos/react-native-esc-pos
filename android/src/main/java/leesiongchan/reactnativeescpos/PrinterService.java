@@ -176,6 +176,9 @@ public class PrinterService {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         String line;
 
+        // reset to normal font size
+        baos.write(new byte[] {0x1b, 0x21, 0x00});
+
         while ((line = reader.readLine()) != null) {
             if (line.matches("\\{QR\\[(.+)\\]\\}")) {
                 try {
