@@ -3,6 +3,9 @@ package leesiongchan.reactnativeescpos;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -37,6 +40,10 @@ public class PrinterService {
         this.printingWidth = printingWidth;
     }
 
+    public void setTextNormal() throws IOException {
+        basePrinterService.setTextNormal();
+    }
+
     public void cutPart() throws IOException {
         basePrinterService.cutPart();
     }
@@ -59,6 +66,16 @@ public class PrinterService {
 
     public void lineBreak(int nbLine) throws IOException {
         basePrinterService.lineBreak(nbLine);
+    }
+
+    public void alignLeft() throws IOException {
+        basePrinterService.setTextAlignLeft();
+    }
+    public void alignCenter() throws IOException {
+        basePrinterService.setTextAlignCenter();
+    }
+    public void alignRight() throws IOException {
+        basePrinterService.setTextAlignRight();
     }
 
     // TODO: This isn't working correctly

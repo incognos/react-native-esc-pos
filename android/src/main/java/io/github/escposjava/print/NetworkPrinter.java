@@ -12,17 +12,16 @@ public class NetworkPrinter implements Printer {
    private OutputStream printer = null;
    private final String address;
    private final int port;
-   private Socket socket;
 
    public NetworkPrinter(String address, int port){
       this.address = address;
       this.port = port;
-      this.socket = new Socket();
    }
 
    public void open() throws IOException {
       InetAddress address = InetAddress.getByName(this.address);
       SocketAddress socketAddress = new InetSocketAddress(address, port);
+      Socket socket = new Socket();
       socket.connect(socketAddress, 3000);
       socket.setKeepAlive(true);
       socket.setSoTimeout(3000);

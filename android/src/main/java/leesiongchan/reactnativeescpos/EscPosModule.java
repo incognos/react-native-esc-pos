@@ -6,6 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -21,7 +24,6 @@ import io.github.escposjava.print.Printer;
 import io.github.escposjava.print.exceptions.BarcodeSizeError;
 import io.github.escposjava.print.exceptions.QRCodeException;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +33,7 @@ import org.json.JSONObject;
 import static io.github.escposjava.print.Commands.*;
 
 public class EscPosModule extends ReactContextBaseJavaModule {
+    private static final String TAG = "EscPosModule";
     public static final String PRINTING_SIZE_58_MM = "PRINTING_SIZE_58_MM";
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
     public static final String BLUETOOTH_CONNECTED = "BLUETOOTH_CONNECTED";
@@ -69,9 +72,24 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void cutPart(Promise promise) throws IOException {
-        printerService.cutPart();
-        promise.resolve(true);
+    public void setTextNormal(Promise promise){
+        try{
+            printerService.setTextNormal();
+            promise.resolve(true);
+        } catch (Exception e){
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void cutPart(Promise promise) {
+        try {
+            printerService.cutPart();
+            promise.resolve(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -79,7 +97,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.cutFull();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
             e.printStackTrace();
         }
@@ -89,7 +107,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public void lineBreak(Promise promise) {
         try {
             printerService.lineBreak();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -101,9 +119,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.print(text);
             promise.resolve(true);
-        } catch (UnsupportedEncodingException e) {
-            promise.reject(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -114,9 +130,40 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.printLn(text);
             promise.resolve(true);
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             promise.reject(e);
-        } catch (IOException e) {
+        }
+    }
+
+    @ReactMethod
+    public void alignLeft(Promise promise) {
+        try {
+            printerService.alignLeft();
+            promise.resolve(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void alignCenter(Promise promise) {
+        try {
+            printerService.alignCenter();
+            promise.resolve(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void alignRight(Promise promise) {
+        try {
+            printerService.alignRight();
+            promise.resolve(true);
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -127,9 +174,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.printBarcode(code, bc, width, height, pos, font);
             promise.resolve(true);
-        } catch (BarcodeSizeError e) {
-            promise.reject(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -140,7 +185,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.printDesign(text);
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
         }
     }
@@ -148,9 +193,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void printImage(String filePath, Promise promise) {
         try {
-            printerService.printImage(filePath);
+            Bitmap image = BitmapFactory.decodeStream(this.reactContext.getResources().openRawResource(this.reactContext.getResources().getIdentifier(filePath, "raw", this.reactContext.getPackageName())));
+            printerService.printImage(image);
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to print image", e);
             promise.reject(e);
         }
     }
@@ -160,9 +207,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.printQRCode(value, size);
             promise.resolve(true);
-        } catch (QRCodeException e) {
-            promise.reject(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -173,7 +218,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.printSample();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
         }
     }
@@ -183,7 +228,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.write(command);
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -191,13 +236,25 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setCharCode(String code) throws IOException {
-        printerService.setCharCode(code);
+    public void setCharCode(String code, Promise promise) {
+        try {
+            printerService.setCharCode(code);
+            promise.resolve(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
-    public void setTextDensity(int density) throws IOException {
-        printerService.setTextDensity(density);
+    public void setTextDensity(int density, Promise promise) {
+        try {
+            printerService.setTextDensity(density);
+            promise.resolve(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            promise.reject(e);
+        }
     }
 
     @ReactMethod
@@ -226,7 +283,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.beep();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -242,7 +299,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.kickCashDrawerPin2();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -253,7 +310,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.kickCashDrawerPin5();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             promise.reject(e);
         }
@@ -268,7 +325,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             Printer printer = new BluetoothPrinter(address);
             printerService = new PrinterService(printer);
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
         }
     }
@@ -282,7 +339,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             Printer printer = new NetworkPrinter(address, port);
             printerService = new PrinterService(printer);
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
         }
     }
@@ -292,7 +349,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
         try {
             printerService.close();
             promise.resolve(true);
-        } catch (IOException e) {
+        } catch (Exception e) {
             promise.reject(e);
         }
     }
