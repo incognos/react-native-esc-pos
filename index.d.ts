@@ -1,29 +1,33 @@
 declare module "react-native-esc-pos" {
-  interface LayoutBuilder {}
-  interface EscPos {
-    addListener: (eventName: EventName, cb: () => void) => void;
-    connect: (address: string, port: number) => void;
-    cutPart: () => Promise<void>;
-    cutFull: () => Promise<void>;
-    lineBreak: () => Promise<void>;
-    print: (text: string) => Promise<void>;
-    printLn: (text: string) => Promise<void>;
-    printBarcode: (
-      code: string,
-      bc: string,
-      width: number,
-      height: number,
-      pos: string,
-      font: string
-    ) => Promise<void>;
-    printDesign: (text: string) => Promise<void>;
-    printImage: (filePath: string) => Promise<void>;
-    printQRCode: (value: string, size: number) => Promise<void>;
-    printSample: () => Promise<void>;
-    write: (command: Buffer) => Promise<void>;
-    alignLeft: () => Promise<void>;
-    alignCenter: () => Promise<void>;
-    alignRight: () => Promise<void>;
+  namespace EscPos {
+    function addListener(eventNameEventName, cb: () => void): void;
+    function setConfig(config): Promise<void>;
+    function setPrintingSize(size): Promise<void>;
+    function setTextDensity(density: number): Promise<void>;
+    function connect(addressstring, portnumber): Promise<void>;
+    function disconnect(): Promise<void>;
+    function cutPart(): Promise<void>;
+    function cutFull(): Promise<void>;
+    function lineBreak(): Promise<void>;
+    function print(textstring): Promise<void>;
+    function printLn(textstring): Promise<void>;
+    function printBarcode(
+      codestring,
+      bcstring,
+      widthnumber,
+      heightnumber,
+      posstring,
+      fontstring
+    ): Promise<void>;
+    function printDesign(textstring): Promise<void>;
+    function printImage(filePathstring): Promise<void>;
+    function printQRCode(valuestring, sizenumber): Promise<void>;
+    function printSample(): Promise<void>;
+    function write(commandBuffer): Promise<void>;
+    function alignLeft(): Promise<void>;
+    function alignCenter(): Promise<void>;
+    function alignRight(): Promise<void>;
+    var PRINTING_SIZE_80_MM;
   }
 
   type EventName = "bluetoothStateChanged" | "bluetoothDeviceFound";
