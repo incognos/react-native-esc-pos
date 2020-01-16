@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -18,6 +16,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 import leesiongchan.reactnativeescpos.helpers.EscPosHelper;
 import leesiongchan.reactnativeescpos.utils.BitMatrixUtils;
 import static io.github.escposjava.print.Commands.*;
@@ -53,7 +53,7 @@ public class PrinterService {
     }
 
     public void print(String text) throws IOException {
-        write(text.getBytes("GBK"));
+        write(text.getBytes("windows-1252"));
     }
 
     public void printLn(String text) throws IOException {
@@ -195,6 +195,8 @@ public class PrinterService {
 
         // reset to normal font size
         baos.write(new byte[] {0x1b, 0x21, 0x00});
+        // set Cp1252 codepage
+        baos.write(new byte[] {0x1b,0x74,0x10});
 
         while ((line = reader.readLine()) != null) {
             if (line.matches("\\{QR\\[(.+)\\]\\}")) {
@@ -230,7 +232,7 @@ public class PrinterService {
             byte[] LINE_SPACE_88 = new byte[] { 0x1b, 0x33, 120 };
             byte[] DEFAULT_LINE_SPACE = new byte[] { 0x1b, 50 };
 
-            baos.write(ESC_t);
+            // baos.write(ESC_t);
             baos.write(FS_and);
             baos.write(ESC_M);
 
@@ -275,7 +277,8 @@ public class PrinterService {
             }
 
             try {
-                baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("GBK"));
+                // charset source https://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html
+                baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("windows-1252"));
             } catch (UnsupportedEncodingException e) {
                 // Do nothing?
             }
