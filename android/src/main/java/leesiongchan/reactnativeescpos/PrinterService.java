@@ -25,7 +25,8 @@ import static io.github.escposjava.print.Commands.*;
 public class PrinterService {
     public static final int PRINTING_WIDTH_58_MM = 384;
     public static final int PRINTING_WIDTH_76_MM = 385;
-    public static final int PRINTING_WIDTH_80_MM = 576;
+    public static final int PRINTING_WIDTH_ = 512; //TM-T70
+    public static final int PRINTING_WIDTH_80_MM = 576; //TM-T20ii/TM-T88/etc
     private static final String CARRIAGE_RETURN = System.getProperty("line.separator");
     private LayoutBuilder layoutBuilder = new LayoutBuilder();
     private final int DEFAULT_QR_CODE_SIZE = 200;

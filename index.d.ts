@@ -39,6 +39,7 @@ declare module "react-native-esc-pos" {
       charset: "IBM437" | "IBM850" | "IBM00858" | "windows-1252"
     ): Promise<void>;
     var PRINTING_SIZE_80_MM;
+    var PRINTING_SIZE_76_MM;
     var PRINTING_SIZE_58_MM;
   }
 
