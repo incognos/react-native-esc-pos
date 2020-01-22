@@ -3,7 +3,10 @@ declare module "react-native-esc-pos" {
     function addListener(eventNameEventName, cb: () => void): void;
     function setConfig(config): Promise<void>;
     function setPrintingSize(
-      size: "PRINTING_SIZE_80_MM" | "PRINTING_SIZE_58_MM"
+      size:
+        | "PRINTING_SIZE_80_MM"
+        | "PRINTING_SIZE_76_MM"
+        | "PRINTING_SIZE_58_MM"
     ): Promise<void>;
     function setCharsOnLine(charsOnLine: number): Promise<void>;
     function setTextDensity(density: number): Promise<void>;

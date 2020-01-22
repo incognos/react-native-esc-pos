@@ -17,6 +17,7 @@ public class LayoutBuilder {
     public static final String TEXT_ALIGNMENT_CENTER = "CENTER";
     public static final String TEXT_ALIGNMENT_RIGHT = "RIGHT";
     public static final int CHARS_ON_LINE_58_MM = 32;
+    public static final int CHARS_ON_LINE_76_MM = 33;
     public static final int CHARS_ON_LINE_80_MM = 48;
     private int charsOnLine = CHARS_ON_LINE_58_MM;
 

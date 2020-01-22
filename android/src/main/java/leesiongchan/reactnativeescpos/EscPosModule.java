@@ -27,6 +27,7 @@ import java.util.Map;
 public class EscPosModule extends ReactContextBaseJavaModule {
     private static final String TAG = "EscPosModule";
     public static final String PRINTING_SIZE_58_MM = "PRINTING_SIZE_58_MM";
+    public static final String PRINTING_SIZE_76_MM = "PRINTING_SIZE_76_MM";
     public static final String PRINTING_SIZE_80_MM = "PRINTING_SIZE_80_MM";
     public static final String BLUETOOTH_CONNECTED = "BLUETOOTH_CONNECTED";
     public static final String BLUETOOTH_DISCONNECTED = "BLUETOOTH_DISCONNECTED";
@@ -51,6 +52,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         constants.put(PRINTING_SIZE_58_MM, PRINTING_SIZE_58_MM);
+        constants.put(PRINTING_SIZE_76_MM, PRINTING_SIZE_76_MM);
         constants.put(PRINTING_SIZE_80_MM, PRINTING_SIZE_80_MM);
         constants.put(BLUETOOTH_CONNECTED, BluetoothEvent.CONNECTED.name());
         constants.put(BLUETOOTH_DISCONNECTED, BluetoothEvent.DISCONNECTED.name());
@@ -258,6 +260,11 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             case PRINTING_SIZE_80_MM:
                 charsOnLine = LayoutBuilder.CHARS_ON_LINE_80_MM;
                 printingWidth = PrinterService.PRINTING_WIDTH_80_MM;
+                break;
+
+            case PRINTING_SIZE_76_MM:
+                charsOnLine = LayoutBuilder.CHARS_ON_LINE_76_MM;
+                printingWidth = PrinterService.PRINTING_WIDTH_76_MM;
                 break;
 
             case PRINTING_SIZE_58_MM:
