@@ -30,6 +30,7 @@ public class PrinterService {
     private final int DEFAULT_QR_CODE_SIZE = 200;
     private int printingWidth = PRINTING_WIDTH_58_MM;
     private io.github.escposjava.PrinterService basePrinterService;
+    private String charsetName = "IBM850";
 
     public PrinterService(Printer printer) throws IOException {
         basePrinterService = new io.github.escposjava.PrinterService(printer);
@@ -53,7 +54,7 @@ public class PrinterService {
     }
 
     public void print(String text) throws IOException {
-        write(text.getBytes("windows-1252"));
+        write(text.getBytes(charsetName));
     }
 
     public void printLn(String text) throws IOException {
@@ -135,6 +136,10 @@ public class PrinterService {
         basePrinterService.setCharCode(code);
     }
 
+    public void setCharset(String charsetName){
+        this.charsetName = charsetName;
+    }
+
     public void setCharsOnLine(int charsOnLine) {
         layoutBuilder.setCharsOnLine(charsOnLine);
     }
@@ -195,8 +200,24 @@ public class PrinterService {
 
         // reset to normal font size
         baos.write(new byte[] {0x1b, 0x21, 0x00});
-        // set Cp1252 codepage
-        baos.write(new byte[] {0x1b,0x74,0x10});
+        // select the charset
+        switch (charsetName) {
+            case "IBM850":
+                // set Cp1252 codepage
+                baos.write(new byte[]{0x1b, 0x74, 0x02});
+                break;
+            case "windows-1252":
+                // set Cp1252 codepage
+                baos.write(new byte[]{0x1b, 0x74, 0x10});
+                break;
+            case "IBM00858":
+                baos.write(new byte[]{0x1b, 0x74, 0x14});
+                break;
+            case "IBM437":
+                default:
+                baos.write(new byte[]{0x1b, 0x74, 0x00});
+                break;
+        }
 
         while ((line = reader.readLine()) != null) {
             if (line.matches("\\{QR\\[(.+)\\]\\}")) {
@@ -218,6 +239,7 @@ public class PrinterService {
             boolean lsl = line.contains("{LS:L}");
             boolean ct = line.contains("{C}");
             boolean rt = line.contains("{R}");
+            boolean divider = line.contains("{D}");
             int charsOnLine = layoutBuilder.getCharsOnLine();
 
             // TODO: Shouldn't put it here
@@ -277,8 +299,12 @@ public class PrinterService {
             }
 
             try {
-                // charset source https://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html
-                baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes("windows-1252"));
+                if(divider){
+                    baos.write(layoutBuilder.createDivider().getBytes(charsetName));
+                } else {
+                    // charset source https://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html
+                    baos.write(layoutBuilder.createFromDesign(line, charsOnLine).getBytes(charsetName));
+                }
             } catch (UnsupportedEncodingException e) {
                 // Do nothing?
             }

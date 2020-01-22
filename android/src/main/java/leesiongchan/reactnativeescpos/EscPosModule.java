@@ -21,16 +21,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import io.github.escposjava.print.NetworkPrinter;
 import io.github.escposjava.print.Printer;
-import io.github.escposjava.print.exceptions.BarcodeSizeError;
-import io.github.escposjava.print.exceptions.QRCodeException;
-
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.json.JSONObject;
-
-import static io.github.escposjava.print.Commands.*;
 
 public class EscPosModule extends ReactContextBaseJavaModule {
     private static final String TAG = "EscPosModule";
@@ -258,7 +250,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setPrintingSize(String printingSize) {
+    public void setPrintingSize(String printingSize, Promise promise) {
         int charsOnLine;
         int printingWidth;
 
@@ -276,6 +268,13 @@ public class EscPosModule extends ReactContextBaseJavaModule {
 
         printerService.setCharsOnLine(charsOnLine);
         printerService.setPrintingWidth(printingWidth);
+        promise.resolve(true);
+    }
+
+    @ReactMethod
+    public void setCharsOnLine(int charsOnLine, Promise promise){
+        printerService.setCharsOnLine(charsOnLine);
+        promise.resolve(true);
     }
 
     @ReactMethod
@@ -290,8 +289,9 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setConfig(ReadableMap config) {
+    public void setConfig(ReadableMap config, Promise promise) {
         this.config = config;
+        promise.resolve(true);
     }
 
     @ReactMethod
@@ -314,6 +314,12 @@ public class EscPosModule extends ReactContextBaseJavaModule {
             e.printStackTrace();
             promise.reject(e);
         }
+    }
+
+    @ReactMethod
+    public void setCharSet(String charset, Promise promise){
+        printerService.setCharset(charset);
+        promise.resolve(true);
     }
 
     @ReactMethod
