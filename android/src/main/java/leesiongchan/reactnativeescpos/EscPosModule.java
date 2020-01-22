@@ -324,7 +324,7 @@ public class EscPosModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setCharSet(String charset, Promise promise){
+    public void setCharset(String charset, Promise promise){
         printerService.setCharset(charset);
         promise.resolve(true);
     }
